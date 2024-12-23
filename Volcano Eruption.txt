@@ -1,0 +1,203 @@
+#include <windows.h>
+#include <GL/glut.h>
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <cmath>
+
+bool isErupting = false;
+const int eruptionDuration = 100;
+
+struct LavaParticle {
+    float x;
+    float y;
+    float velocityY;
+};
+
+const int maxParticles = 500;
+LavaParticle lavaParticles[maxParticles];
+float level = 0.4f;
+float levelX=0.1f;
+
+void initializeLavaParticles() {
+    srand(time(NULL));
+    for (int i = 0; i < maxParticles; ++i) {
+        lavaParticles[i].x = 0.1 * cos((rand() % 360) * 3.14159 / 180);
+        lavaParticles[i].y = -0.35 * sin((rand() % 360) * 3.14159 / 180) + 0.1;
+        lavaParticles[i].velocityY = -0.005 - static_cast<float>(rand()) / RAND_MAX * 0.02;
+    }
+}
+
+
+void volcano() {
+    glBegin(GL_POLYGON);
+    glColor3ub(149, 122, 98);
+    glVertex2f(-0.1, 0.4);
+    glVertex2f(-0.65, -0.30);
+    glVertex2f(0.65, -0.30);
+    glVertex2f(0.1, 0.4);
+    glEnd();
+
+ glBegin(GL_QUADS);
+        glColor3ub(160, 19, 0);
+        glVertex2f(-0.1, 0.40);
+        glVertex2f(0.1, 0.40);
+        glVertex2f(-levelX, level);
+        glVertex2f(levelX, level);
+        glEnd();
+
+    if (isErupting) {
+        glBegin(GL_POLYGON);
+        glColor3f(1.0f, 0.0f, 0.0f);
+        glVertex2f(-0.1, 0.4);
+        glVertex2f(0.1, 0.4);
+        glVertex2f(0.12, 0.45);
+        glVertex2f(-0.12, 0.45);
+        glEnd();
+
+        glBegin(GL_POLYGON);
+        glColor3f(1.0f, 0.0f, 0.0f);
+        glVertex2f(-0.05, 0.45);
+        glVertex2f(0.05, 0.45);
+        glVertex2f(0.0, 0.55);
+        glEnd();
+
+
+        glPointSize(3.0);
+        glBegin(GL_POINTS);
+        glColor3f(1.0, 0.0, 0.0);
+        for (int i = 0; i < maxParticles; ++i) {
+
+            lavaParticles[i].y += lavaParticles[i].velocityY;
+
+            glVertex2f(lavaParticles[i].x, lavaParticles[i].y);
+
+            if (lavaParticles[i].y < -0.6) {
+                lavaParticles[i].x = 0.1 * cos((rand() % 360) * 3.14159 / 180);
+                lavaParticles[i].y = -0.35 * sin((rand() % 360) * 3.14159 / 180) + 0.1;
+                lavaParticles[i].velocityY = -0.005 - static_cast<float>(rand()) / RAND_MAX * 0.02;
+            }
+        }
+        glEnd();
+
+    }
+}
+
+void River() {
+    glBegin(GL_POLYGON);
+    glColor3f(0.0f, 0.749f, 1.0f);
+    glVertex2f(-1.0, -0.6);
+    glVertex2f(-1.0, -1.0);
+    glVertex2f(1.0, -1.0);
+    glVertex2f(1.0, -0.6);
+    glEnd();
+
+    if (isErupting) {
+        glBegin(GL_POLYGON);
+        glColor3f(1.0f, 0.0f, 0.0f);
+        glVertex2f(-0.68, -0.6);
+        glVertex2f(-0.68, -0.62);
+        glVertex2f(0.68, -0.62);
+        glVertex2f(0.68, -0.60);
+        glEnd();
+    }
+}
+
+void sky() {
+    glBegin(GL_POLYGON);
+    glColor3ub(133, 193, 233);
+    glVertex2f(-1.0f, 1.0f);
+    glVertex2f(-1.0f, 0.65f);
+    glVertex2f(1.0f, 0.65f);
+    glVertex2f(1.0f, 1.0f);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3ub(247, 220, 111);
+    float r = 0.1;
+    for (int i = 0; i < 200; i++) {
+        float pi = 3.1416;
+        float A = (i * 2 * pi) / 200;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x + 0.54, y + 0.80);
+    }
+    glEnd();
+}
+
+void drawScene() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    glLoadIdentity();
+    River();
+    sky();
+    volcano();
+    glutSwapBuffers();
+}
+
+void update(int value) {
+    if (isErupting) {
+        for (int i = 0; i < maxParticles; ++i) {
+            lavaParticles[i].y += lavaParticles[i].velocityY;
+            if (lavaParticles[i].y < -0.6) {
+                lavaParticles[i].x = 0.1 * cos((rand() % 360) * 3.14159 / 180);
+                lavaParticles[i].y = -0.25 * sin((rand() % 360) * 3.14159 / 180) + 0.1;
+                lavaParticles[i].velocityY = -0.005 - static_cast<float>(rand()) / RAND_MAX * 0.02;
+            }
+        }
+    }
+
+    glutPostRedisplay();
+    glutTimerFunc(10, update, 0);
+}
+
+void handleKeyPress(unsigned char key, int x, int y) {
+    switch (key) {
+        case 'S':
+        case 's':
+            isErupting = true;
+            break;
+        case 'F':
+        case 'f':
+            isErupting = false;
+            break;
+    }
+}
+
+void Timerlevel(int value)
+{
+    if(isErupting){
+        level-=0.0003;
+       if (level >= 0.40)
+            level=0.90;
+    }
+    glutPostRedisplay();
+    glutTimerFunc(10, Timerlevel, 0);
+
+}
+
+void TimerlevelX(int value)
+{
+    if(isErupting){
+        levelX-=0.0003;
+       if (levelX >= 0.10&&levelX <= -0.10)
+            levelX=0.40;
+    }
+    glutPostRedisplay();
+    glutTimerFunc(10, TimerlevelX, 0);
+}
+
+int main(int argc, char** argv) {
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutInitWindowSize(800, 600);
+    glutCreateWindow("Volcano Eruption");
+    glClearColor(0.3f, 0.3f, 0.3f, 0.80f);
+    initializeLavaParticles();
+    glutDisplayFunc(drawScene);
+    glutTimerFunc(10, Timerlevel, 0);
+    glutTimerFunc(10, TimerlevelX, 0);
+    glutTimerFunc(10, update, 0);
+    glutKeyboardFunc(handleKeyPress);
+    glutMainLoop();
+    return 0;
+}

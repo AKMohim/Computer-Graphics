@@ -1,0 +1,589 @@
+
+#include <windows.h>
+#include <GL/glut.h>
+#include <math.h>
+
+bool isDay = true;
+
+float zoomLevel = 1.0f;
+bool zoomingIn = true;
+
+void River() {
+    glBegin(GL_QUADS);
+    if (isDay)
+        glColor3ub(55, 166, 229);
+    else
+        glColor3ub(10, 32, 41);
+
+    glVertex2f(-1.0, -1.0);
+    glVertex2f(1.0, -1.0);
+    glVertex2f(1.0, 0.3);
+    glVertex2f(-1.0, 0.3);
+
+    glEnd();
+}
+
+void Ground(float Px, float Py) {
+    glBegin(GL_POLYGON);
+    if (isDay)
+        glColor3ub(131, 245, 61);
+    else
+        glColor3ub(20, 40, 30);
+
+    glVertex2f(-1.0 + Px, -1.0 + Py);
+    glVertex2f(0.0 + Px, -1.0 + Py);
+    glVertex2f(0.2 + Px, -0.75 + Py);
+    glVertex2f(0.0 + Px, -0.5 + Py);
+    glVertex2f(-1.0 + Px, -0.5 + Py);
+
+    glEnd();
+}
+
+void Sky() {
+    glBegin(GL_QUADS);
+    if (isDay)
+        glColor3ub(99, 209, 240);
+    else
+        glColor3ub(15, 15, 25);
+
+    glVertex2f(-1.0, 0.3);
+    glVertex2f(1.0, 0.3);
+    glVertex2f(1.0, 1.0);
+    glVertex2f(-1.0, 1.0);
+
+    glEnd();
+}
+
+void Road() {
+    glBegin(GL_QUADS);
+    if (isDay)
+        glColor3ub(212, 189, 101);
+    else
+        glColor3ub(30, 30, 30);
+
+    glVertex2f(-0.68, -1.0);
+    glVertex2f(-0.44, -1.0);
+    glVertex2f(-0.05, -0.45);
+    glVertex2f(-0.05, -0.25);
+
+    glEnd();
+
+    glBegin(GL_QUADS);
+    if (isDay)
+        glColor3ub(212, 189, 101);
+    else
+        glColor3ub(30, 30, 30);
+
+    glVertex2f(-0.18, -0.44);
+    glVertex2f(-0.05, -0.25);
+    glVertex2f(-0.26, 0.0);
+    glVertex2f(-0.48, 0.0);
+
+    glEnd();
+}
+
+void Home() {
+    glBegin(GL_QUADS);
+    if (isDay)
+        glColor3ub(180, 177, 153);
+    else
+        glColor3ub(145, 148, 120);
+
+    glVertex2f(-0.55, 0.0);
+    glVertex2f(-0.2, 0.0);
+    glVertex2f(-0.20, 0.2);
+    glVertex2f(-0.55, 0.2);
+
+    glEnd();
+
+    glBegin(GL_QUADS);
+    if (isDay)
+        glColor3ub(242, 233, 173);
+    else
+        glColor3ub(246, 236, 77);
+
+    glVertex2f(-0.45, 0.0);
+    glVertex2f(-0.3, 0.0);
+    glVertex2f(-0.3, 0.13);
+    glVertex2f(-0.45, 0.13);
+
+    glEnd();
+
+    glBegin(GL_QUADS);
+    if (isDay)
+        glColor3ub(75, 73, 54);
+    else
+        glColor3ub(50, 50, 50);
+
+    glVertex2f(-0.55, 0.2);
+    glVertex2f(-0.2, 0.2);
+    glVertex2f(-0.3, 0.3);
+    glVertex2f(-0.65, 0.3);
+
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    if (isDay)
+        glColor3ub(180, 177, 153);
+    else
+        glColor3ub(145, 148, 120);
+
+    glVertex2f(-0.75, 0.0);
+    glVertex2f(-0.55, 0.0);
+    glVertex2f(-0.55, 0.2);
+    glVertex2f(-0.65, 0.3);
+    glVertex2f(-0.75, 0.2);
+
+    glEnd();
+
+    glBegin(GL_LINES);
+    if (isDay)
+        glColor3ub(27, 27, 26);
+    else
+        glColor3ub(255, 255, 255);
+
+    glVertex2f(-0.55, 0.0);
+    glVertex2f(-0.55, 0.2);
+
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    if (isDay)
+        glColor3ub(242, 233, 173);
+    else
+        glColor3ub(246, 236, 77);
+
+    glVertex2f(-0.7, 0.06);
+    glVertex2f(-0.62, 0.06);
+    glVertex2f(-0.62, 0.13);
+    glVertex2f(-0.7, 0.13);
+
+    glEnd();
+}
+
+void Cinn() {
+    glBegin(GL_POLYGON);
+    if (isDay)
+        glColor3ub(251, 231, 85);
+    else
+        glColor3ub(183, 175, 49);
+
+    glVertex2f(-0.95, 0.0);
+    glVertex2f(-0.8, 0.0);
+    glVertex2f(-0.8, 0.12);
+    glVertex2f(-0.88, 0.23);
+    glVertex2f(-0.95, 0.12);
+
+    glEnd();
+
+    glBegin(GL_LINES);
+    if (isDay)
+        glColor3ub(251, 231, 85);
+    else
+        glColor3ub(183, 175, 49);
+
+    glVertex2f(-0.88, 0.26);
+    glVertex2f(-0.88, 0.23);
+
+    glEnd();
+}
+
+void Tree() {
+    glBegin(GL_POLYGON);
+    if (isDay)
+        glColor3ub(129, 100, 53);
+    else
+        glColor3ub(119, 850, 63);
+
+    glVertex2f(-0.15, 0.0);
+    glVertex2f(-0.05, 0.0);
+    glVertex2f(-0.05, 0.35);
+    glVertex2f(-0.15, 0.35);
+
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 200; i++) {
+        if (isDay)
+            glColor3ub(28, 143, 49);
+        else
+            glColor3ub(0, 128, 0);
+
+        float pi = 3.1416;
+        float A = (i * 2 * pi) / 200;
+        float r = 0.13;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x - 0.2, y + 0.35);
+    }
+
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 200; i++) {
+        if (isDay)
+            glColor3ub(28, 143, 49);
+        else
+            glColor3ub(0, 128, 0);
+        float pi = 3.1416;
+        float A = (i * 2 * pi) / 200;
+        float r = 0.13;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x, y + 0.35);
+    }
+
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 200; i++) {
+        if (isDay)
+            glColor3ub(28, 143, 49);
+        else
+            glColor3ub(0, 128, 0);
+        float pi = 3.1416;
+        float A = (i * 2 * pi) / 200;
+        float r = 0.13;
+        float x = r * cos(A);
+        float y = r * sin(A);
+        glVertex2f(x - 0.1, y + 0.5);
+    }
+
+    glEnd();
+}
+
+void Grass(float pX, float pY) {
+    glBegin(GL_TRIANGLES);
+    if (isDay)
+        glColor3ub(14, 64, 23);
+    else
+        glColor3ub(24, 72, 10);
+
+    glVertex2d(-0.74 + pX, -0.56 + pY);
+    glVertex2d(-0.7 + pX, -0.56 + pY);
+    glVertex2d(-0.72 + pX, -0.5 + pY);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    if (isDay)
+        glColor3ub(14, 64, 23);
+    else
+        glColor3ub(24, 72, 10);
+
+    glVertex2d(-0.78 + pX, -0.52 + pY);
+    glVertex2d(-0.762 + pX, -0.51 + pY);
+    glVertex2d(-0.76 + pX, -0.5 + pY);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    if (isDay)
+        glColor3ub(14, 64, 23);
+    else
+        glColor3ub(24, 72, 10);
+
+    glVertex2d(-0.745 + pX, -0.56 + pY);
+    glVertex2d(-0.74 + pX, -0.56 + pY);
+    glVertex2d(-0.739 + pX, -0.557 + pY);
+    glVertex2d(-0.76 + pX, -0.5 + pY);
+    glVertex2d(-0.762 + pX, -0.51 + pY);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    if (isDay)
+        glColor3ub(14, 64, 23);
+    else
+        glColor3ub(24, 72, 10);
+
+    glVertex2d(-0.66 + pX, -0.52 + pY);
+    glVertex2d(-0.678 + pX, -0.51 + pY);
+    glVertex2d(-0.68 + pX, -0.5 + pY);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    if (isDay)
+        glColor3ub(14, 64, 23);
+    else
+        glColor3ub(24, 72, 10);
+
+    glVertex2d(-0.695 + pX, -0.56 + pY);
+    glVertex2d(-0.7 + pX, -0.56 + pY);
+    glVertex2d(-0.701 + pX, -0.557 + pY);
+    glVertex2d(-0.68 + pX, -0.5 + pY);
+    glVertex2d(-0.678 + pX, -0.51 + pY);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    if (isDay)
+        glColor3ub(14, 64, 23);
+    else
+        glColor3ub(24, 72, 10);
+
+    glVertex2d(-0.695 + pX, -0.51 + pY);
+    glVertex2d(-0.704 + pX, -0.504 + pY);
+    glVertex2d(-0.705 + pX, -0.5 + pY);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    if (isDay)
+        glColor3ub(14, 64, 23);
+    else
+        glColor3ub(24, 72, 10);
+
+    glVertex2d(-0.712 + pX, -0.524 + pY);
+    glVertex2d(-0.71 + pX, -0.53 + pY);
+    glVertex2d(-0.704 + pX, -0.504 + pY);
+    glVertex2d(-0.705 + pX, -0.5 + pY);
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    if (isDay)
+        glColor3ub(14, 64, 23);
+    else
+        glColor3ub(24, 72, 10);
+
+    glVertex2d(-0.746 + pX, -0.51 + pY);
+    glVertex2d(-0.738 + pX, -0.504 + pY);
+    glVertex2d(-0.736 + pX, -0.5 + pY);
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    if (isDay)
+        glColor3ub(14, 64, 23);
+    else
+        glColor3ub(24, 72, 10);
+
+    glVertex2d(-0.728 + pX, -0.524 + pY);
+    glVertex2d(-0.73 + pX, -0.53 + pY);
+    glVertex2d(-0.738 + pX, -0.504 + pY);
+    glVertex2d(-0.736 + pX, -0.5 + pY);
+    glEnd();
+}
+
+void Boat() {
+    glBegin(GL_QUADS);
+    if (isDay)
+        glColor3ub(47, 28, 71);
+    else
+        glColor3ub(47, 28, 71);
+
+    glVertex2f(0.25, -0.70);
+    glVertex2f(0.4, -0.7);
+    glVertex2f(0.5, -0.6);
+    glVertex2f(0.15, -0.6);
+
+    glEnd();
+}
+
+void Sun() {
+    if (isDay) {
+        glBegin(GL_POLYGON);
+        glColor3ub(247, 220, 111);
+        float r = 0.08;
+        for (int i = 0; i < 200; i++) {
+            float pi = 3.1416;
+            float A = (i * 2 * pi) / 200;
+            float x = r * cos(A);
+            float y = r * sin(A);
+            glVertex2f(x + 0.54, y+0.8);
+        }
+        glEnd();
+    } else {
+        glBegin(GL_POLYGON);
+        glColor3ub(208, 211, 212);
+        float r = 0.08;
+        for (int i = 0; i < 200; i++) {
+            float pi = 3.1416;
+            float A = (i * 2 * pi) / 200;
+            float x = r * cos(A);
+            float y = r * sin(A) ;
+            glVertex2f(x + 0.54, y+0.8);
+        }
+        glEnd();
+    }
+}
+
+void Mountain() {
+    glBegin(GL_TRIANGLES);
+    if (isDay)
+        glColor3ub(98, 117, 47);
+    else
+        glColor3ub(98, 117, 47);
+
+    glVertex2f(-0.86, 0.3);
+    glVertex2f(-0.34, 0.3);
+    glVertex2f(-0.6, 0.5);
+
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    if (isDay)
+        glColor3ub(98, 117, 47);
+    else
+        glColor3ub(98, 117, 47);
+
+    glVertex2f(-0.1, 0.3);
+    glVertex2f(0.3, 0.3);
+    glVertex2f(0.1, 0.5);
+
+    glEnd();
+
+    glBegin(GL_TRIANGLES);
+    if (isDay)
+        glColor3ub(98, 117, 47);
+    else
+        glColor3ub(98, 117, 47);
+
+    glVertex2f(0.38, 0.3);
+    glVertex2f(0.76, 0.3);
+    glVertex2f(0.58, 0.5);
+
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    if (isDay)
+        glColor3ub(42, 72, 18);
+    else
+        glColor3ub(42, 72, 18);
+
+    glVertex2f(-1.0, 0.3);
+    glVertex2f(-0.86, 0.3);
+    glVertex2f(-0.73, 0.4);
+    glVertex2f(-0.91, 0.51);
+    glVertex2f(-1.0, 0.45);
+
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    if (isDay)
+        glColor3ub(42, 72, 18); // Day color
+    else
+        glColor3ub(42, 72, 18);
+
+    glVertex2f(-0.34, 0.3);
+    glVertex2f(-0.1, 0.3);
+    glVertex2f(-0.02, 0.38);
+    glVertex2f(-0.22, 0.5);
+    glVertex2f(-0.444, 0.38);
+
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    if (isDay)
+        glColor3ub(42, 72, 18);
+    else
+        glColor3ub(42, 72, 18);
+
+    glVertex2f(0.3, 0.3);
+    glVertex2f(0.38, 0.3);
+    glVertex2f(0.48, 0.4);
+    glVertex2f(0.34, 0.5);
+    glVertex2f(0.2, 0.4);
+
+    glEnd();
+}
+
+void Boat22(float pX, float pY) {
+    glBegin(GL_QUADS);
+    if (isDay)
+        glColor3ub(75, 63, 71);
+    else
+        glColor3ub(75, 63, 71);
+
+    glVertex2f(0.75 + pX, 0.05 + pY);
+    glVertex2f(0.9 + pX, 0.05 + pY);
+    glVertex2f(1.0 + pX, 0.15 + pY);
+    glVertex2f(0.65 + pX, 0.15 + pY);
+
+    glEnd();
+
+    glBegin(GL_QUADS);
+    if (isDay)
+        glColor3ub(144, 110, 135);
+    else
+        glColor3ub(144, 110, 135);
+
+    glVertex2f(0.75 + pX, 0.15 + pY);
+    glVertex2f(0.9 + pX, 0.15 + pY);
+    glVertex2f(0.9 + pX, 0.25 + pY);
+    glVertex2f(0.75 + pX, 0.25 + pY);
+
+    glEnd();
+}
+
+void display() {
+    glClearColor(0.60f, 0.60f, 0.60f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+     glLoadIdentity();
+
+    // Apply scaling transformation
+    glScalef(zoomLevel, zoomLevel, 1.0f);
+    River();
+    Boat22(-1.7, 0.05);
+    Sky();
+    Ground(0, 0);
+    Ground(0, 0.5);
+    Road();
+    Home();
+    Cinn();
+    Grass(0, 0);
+    Grass(0.3, 0);
+    Grass(-0.1, 0.45);
+    Grass(0.3, 0.2);
+    Grass(0.0, 0.3);
+    Grass(-0.2, 0.1);
+    Grass(0.2, 0.45);
+    Grass(0.3, 00.3);
+    Grass(0.3, -0.10);
+    Boat();
+    Sun();
+    Mountain();
+    Tree();
+    Boat22(0, 0);
+    Boat22(-0.4, -0.2);
+    Boat22(-0.5, 0.1);
+    Boat22(-0.25, -0.6);
+    glutSwapBuffers();
+
+    glFlush();
+}
+
+void Timer(int value) {
+    if (zoomingIn) {
+        if (zoomLevel < 1.8f) {
+            zoomLevel += 0.01f; // Zoom in
+        } else {
+            zoomingIn = false; // Change direction to zoom out
+        }
+    } else {
+        if (zoomLevel > 1.0f) {
+            zoomLevel -= 0.01f; // Zoom out
+        } else {
+            zoomingIn = true; // Change direction to zoom in
+        }
+    }
+
+    glutPostRedisplay();
+    glutTimerFunc(100, Timer, 0);
+}
+void updateScene(int value) {
+    // Toggle day/night
+    isDay = !isDay;
+
+    // Schedule next update
+    glutTimerFunc(3000, updateScene, 0);
+
+    // Redraw the scene
+    glutPostRedisplay();
+}
+
+int main(int argc, char** argv) {
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutInitWindowSize(800, 600);
+    glutCreateWindow("Zoom In and Out Animation");
+     glutTimerFunc(3000, updateScene, 0);
+    glutDisplayFunc(display);
+    glutTimerFunc(100, Timer, 0);
+    glutMainLoop();
+    return 0;
+}

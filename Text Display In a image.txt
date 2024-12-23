@@ -1,0 +1,110 @@
+#include <windows.h>
+#include <GL/glut.h>
+#include <iostream>
+#include "glutil.h"
+
+bool showImage = false;
+bool showText = false;
+
+int currentSentence = 0;
+std::string sentences[] = {
+    "The image shows",
+    "an elephant spraying water from its trunk.",
+    "In the story, the elephant is playing",
+    "with some birds in the desert.",
+    "The elephant hears a noise and",
+    "stops to look at the birds.",
+    "The birds are curious and",
+    "decide to follow the elephant.",
+    "They follow the elephant for a long time",
+    "until they come to a watering hole.",
+    "The elephant then sprays water with its trunk."
+};
+void image()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+
+
+    glColor3d(1.0, 1.0, 1.0);
+    glBegin(GL_QUADS);
+    glVertex2f(-1.0f, -1.0f);
+    glVertex2f(1.0f, -1.0f);
+    glVertex2f(1.0f, 1.0f);
+    glVertex2f(-1.0f, 1.0f);
+    glEnd();
+
+    if (showImage) {
+
+        glColor3d(1.0, 1.0, 01.0);
+        glPushMatrix();
+        glTranslatef(-0.2f, -0.2f, 0.0f);
+        glBegin(GL_QUADS);
+        glVertex2f(0.0f, 0.0f);
+        glVertex2f(0.4f, 0.0f);
+        glVertex2f(0.4f, 0.4f);
+        glVertex2f(0.0f, 0.4f);
+        glEnd();
+
+        ApplyTexture(-1.0f, 1.0f, -1.0f, -1.0f, 1.30f, -1.0f, 1.30f, 1.0f, textures[0].textureID);
+
+        glPopMatrix();
+    }
+
+    if (showText) {
+
+        glColor3f(0.0, 0.0, 0.0);
+
+
+        glRasterPos2f(-01.0, 0.9);
+
+
+        const char* text = sentences[currentSentence].c_str();
+        for (int i = 0; text[i] != '\0'; ++i) {
+            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
+        }
+    }
+}
+
+void display() {
+    image();
+
+    glutSwapBuffers();
+}
+
+void timer(int value) {
+    showImage = true;
+     glutTimerFunc(1000,timer,0);
+    glutPostRedisplay();
+}
+
+void timer1(int value) {
+    showText = true;
+     glutTimerFunc(3000,timer1,0);
+    glutPostRedisplay();
+    currentSentence++;
+    if (currentSentence >= sizeof(sentences) / sizeof(sentences[0])) {
+        currentSentence = 0;
+    }
+}
+
+int main(int argc, char** argv) {
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutInitWindowSize(400, 300);
+    glutCreateWindow("Image and Text Display");
+
+    loadImageAndStore("C:\\Users\\DELL LATITUDE 7400\\Pictures\\elephant.bmp");
+
+
+    gluOrtho2D(-1, 1, -1, 1);
+
+    glutDisplayFunc(display);
+
+
+    glutTimerFunc(1000, timer, 0);
+    glutTimerFunc(3000, timer1, 0);
+
+    glutMainLoop();
+
+    return 0;
+}
